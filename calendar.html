@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <!-- Bootstrap CSS CDN -->
+ <link rel="stylesheet"
+href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css"
+ integrity="sha384-
+9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4"
+crossorigin="anonymous">
+ <title>Calendar</title>
+</head>
+<body>
+ <div style="width:50%; margin-top:100px; margin-left:400px;">
+ <div>
+ <h3 id="year" style="display:inline-block"></h3>
+ <h3 id="month" style="display:inline-block"></h3>
+ </div>
+ <div style="float:right">
+ <button onclick="minus_one_year()">-</button>
+ Year
+ <button onclick="plus_one_year()">+</button> <br> <br>
+ <button onclick="next_month()"><</button>
+ Month
+ <button onclick="previous_month()">></button> <br> 
+ </div> <br>
+ <br>
+ <h3 id="monthAndYear"></h3>
+ <table class="table table-bordered">
+ <thead>
+ <tr>
+ <th>Sun</th>
+ <th>Mon</th>
+ <th>Tue</th>
+ <th>Wed</th>
+ <th>Thu</th>
+ <th>Fri</th>
+ <th>Sat</th>
+ </tr>
+ </thead>
+ <tbody id="calendar-body">
+ </tbody>
+ </table>
+ </div>
+ <script>
+ let today = new Date();
+ let currentMonth = today.getMonth();
+ let currentYear = today.getFullYear();
+ let selectYear = document.getElementById("year");
+ let selectMonth = document.getElementById("month");
+ let months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov",
+"Dec"];
+ let monthAndYear = document.getElementById("monthAndYear");
+ showCalendar(currentMonth, currentYear);
+ function minus_one_year() {
+ showCalendar(currentMonth, currentYear -= 1);
+ }
+ function plus_one_year() {
+ showCalendar(currentMonth, currentYear += 1);
+ }
+ function next_month() {
+ currentYear = (currentMonth === 11) ? currentYear + 1 : currentYear;
+ currentMonth = (currentMonth + 1) % 12;
+ showCalendar(currentMonth, currentYear);
+ }
+ function previous_month() {
+ currentYear = (currentMonth === 0) ? currentYear - 1 : currentYear;
+ currentMonth = (currentMonth === 0) ? 11 : currentMonth - 1;
+ showCalendar(currentMonth, currentYear);
+ }
+ function showCalendar(month, year) {
+ let firstDay = (new Date(year, month)).getDay();
+ let daysInMonth = 32 - new Date(year, month, 32).getDate();
+ let tbl = document.getElementById("calendar-body");
+ //Now clearing all previous cells dates
+ tbl.innerHTML = "";
+ // DOM Manipulation
+ monthAndYear.innerHTML = months[month] + " " + year;
+ selectYear.value = year;
+ selectMonth.value = month;
+ let date = 1;
+ for (let i = 0; i < 6; i++) {
+ let row = document.createElement("tr");
+ //creating individual cells
+ for (let j = 0; j < 7; j++) {
+ if (i === 0 && j < firstDay) {
+ let cell = document.createElement("td");
+ let cellText = document.createTextNode("");
+ cell.appendChild(cellText);
+ row.appendChild(cell);
+ }
+ else if (date > daysInMonth) {
+ break;
+ }
+ else {
+ let cell = document.createElement("td");
+ let cellText = document.createTextNode(date);
+ cell.appendChild(cellText);
+ row.appendChild(cell);
+ date++;
+ }
+ }
+ tbl.appendChild(row); // appending each row into calendar body.
+ }
+ }
+ </script>
+</body>
+</html>
